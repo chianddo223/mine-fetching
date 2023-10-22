@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Que pasa</title>
+    <style>
+        @font-face {
+            font-family: 'CookieRun-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        table {
+            border-collapse: collapse;
+            background: #888;
+        }
+
+        td {
+            font-family: 'CookieRun-Regular';
+            font-size: 5.8vw;
+            border: 1vw solid #bbb;
+            text-align: center;
+            line-height: 20px;
+            width: 8vw;
+            height: 8vw;
+            background: #888;
+        }
+
+        td#mine {
+            color: #888;
+            background: #888;
+        }
+
+        td.opened {
+            background: white;
+        }
+
+        td.flag {
+            background: red;
+        }
+    </style>
+</head>
+
+<body>
+    <table id="table">
+        <tbody>
+        </tbody>
+    </table>
+    <form id="form">
+        <input placeholder="가로 줄" id="row" size="5" />
+        <input placeholder="세로 줄" id="cell" size="5" />
+        <input placeholder="지뢰" id="mine" size="5" />
+        <button>게임시작</button>
+    </form>
+    <div class="result"></div>
+    <script>
+        const $tbody = document.querySelector('#table tbody');
+        const $result = document.querySelector('#result');
+        const $inputRow = document.querySelector('#row');
+        const $inputCol = document.querySelector('#cell');
+        const $inputMine = document.querySelector('#mine');
+        const $btn = document.querySelector('button');
+        const rows = [];
+        const flattedArray = rows.flat();
+        const copyFlatted = flattedArray.concat();
+        const randomArray = [];
+        const mineArray = [];
+        let numRows = 0;
+        let numClos = 0;
+        let numMine = 0;
+        let arrayWidth = 0;
+
+        $btn.addEventListener('click', startGame);
+        function startGame() {
+            event.preventDefault();
+            numRows = $inputRow.value;
+            numClos = $inputCol.value;
+            numMine = parseInt($inputMine.value);
+            arrayWidth = numRows * numClos;
+            for (let i = 0; i < numRows; i++) { // 2차원배열 만들기.
+                const $tr = document.createElement('tr');
+                const cells = [];
+                for (let j = 0; j < numClos; j++) { // 각각의 td가 생성되면서 특성부여받음.
+                    const $td = document.createElement('td');
+                    $td.addEventListener('click', makeVisible);
+                    $td.addEventListener('contextmenu', fillRed);
+                    $td.classList.add(i * 10 + j);
+                    cells.push($td);
+                    $tr.append($td);
+                }
+                rows.push(cells);
+                $tbody.append($tr);
+            };
+            shuffleMine();
+        };
+        function shuffleMine() {
+            console.log(arrayWidth, numMine)
+            for (let i = 0; i < arrayWidth; i++) { // 랜덤 지뢰 배열만들기.
+                const randomIndex = flattedArray.splice(Math.floor(Math.random() * flattedArray.length), 1);
+                randomArray.push(randomIndex);
+            }
+            const flattedRandom = randomArray.flat();
+            for (let j = 0; j < numMine; j++) { // 지뢰 배열 만들고, id, 텍스트 달아주기.
+                mineArray.push(flattedRandom[j]);
+                mineArray[j].id = "mine";
+            }
+        }
+
+
+        function makeVisible() {
+            if (this.id === 'mine') {
+                this.style.color = 'white';
+                this.style.background = 'black';
+                this.textContent = '💥';
+            };
+        };
+        function fillRed() {
+            event.preventDefault();
+            if (this.style.background === 'red') {
+                this.style.background = '#888';
+                this.textContent = '';
+            } else {
+                this.style.background = 'red';
+                this.style.color = 'black';
+                this.textContent = '⚠️';
+            };
+        };
+        console.log(mineArray);
+    </script>
+</body>
+
+</html>
