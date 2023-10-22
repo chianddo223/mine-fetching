@@ -55,19 +55,17 @@
         <input placeholder="지뢰" id="mine" size="5" />
         <button>게임시작</button>
     </form>
-    <div class="result"></div>
     <script>
         const $tbody = document.querySelector('#table tbody');
-        const $result = document.querySelector('#result');
         const $inputRow = document.querySelector('#row');
         const $inputCol = document.querySelector('#cell');
         const $inputMine = document.querySelector('#mine');
         const $btn = document.querySelector('button');
         const rows = [];
-        const flattedArray = rows.flat();
-        const copyFlatted = flattedArray.concat();
         const randomArray = [];
         const mineArray = [];
+        let flattedArray = rows.flat();
+        let copyFlatted = flattedArray.concat();
         let numRows = 0;
         let numClos = 0;
         let numMine = 0;
@@ -94,13 +92,17 @@
                 rows.push(cells);
                 $tbody.append($tr);
             };
+            flattedArray = rows.flat();
+            copyFlatted = flattedArray.concat();
             shuffleMine();
         };
+
         function shuffleMine() {
-            console.log(arrayWidth, numMine)
-            for (let i = 0; i < arrayWidth; i++) { // 랜덤 지뢰 배열만들기.
+            console.log(flattedArray)
+            for (let i = 0; i < numMine; i++) { // 랜덤 지뢰 배열만들기.
                 const randomIndex = flattedArray.splice(Math.floor(Math.random() * flattedArray.length), 1);
                 randomArray.push(randomIndex);
+                console.log(randomArray)
             }
             const flattedRandom = randomArray.flat();
             for (let j = 0; j < numMine; j++) { // 지뢰 배열 만들고, id, 텍스트 달아주기.
