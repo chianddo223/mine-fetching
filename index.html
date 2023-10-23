@@ -33,10 +33,6 @@
             color: #888;
             background: #888;
         }
-
-        td.opened {
-            background: white;
-        }
     </style>
 </head>
 
@@ -119,16 +115,23 @@
                 onClickClass - 1, parseInt(onClickClass) + 1,
                 parseInt(onClickClass) + 9, parseInt(onClickClass) + 10, parseInt(onClickClass) + 11];
                 for (let i = 0; i < classOfCheckList.length; i++) {
-                   checkList.push(copyFlatted[classOfCheckList[i]]);
+                    checkList.push(copyFlatted[classOfCheckList[i]]);
                 };
                 console.log(checkList);
                 const countMine = checkList.filter(item => item.id === "mine").length;
                 this.textContent = countMine;
+                if (countMine === 0) {
+                    this.textContent = '';
+                    for (let j = 0; j < classOfCheckList.length; j++) {
+                        // copyFlatted[classOfCheckList[j]].textContent =  
+                    }
+                }
+                this.style.background = 'white';
             };
         };
         function fillRed() {
             event.preventDefault();
-            if (this.style.background === 'red') {
+            if (this.textContent === '🚩') {
                 this.style.background = '#888';
                 this.textContent = '';
             } else {
