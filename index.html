@@ -37,10 +37,6 @@
         td.opened {
             background: white;
         }
-
-        td.flag {
-            background: red;
-        }
     </style>
 </head>
 
@@ -83,7 +79,7 @@
                 const cells = [];
                 for (let j = 0; j < numClos; j++) { // 각각의 td가 생성되면서 특성부여받음.
                     const $td = document.createElement('td');
-                    $td.addEventListener('click', makeVisible);
+                    $td.addEventListener('click', onClick);
                     $td.addEventListener('contextmenu', fillRed);
                     $td.classList.add(i * 10 + j);
                     cells.push($td);
@@ -102,7 +98,6 @@
             for (let i = 0; i < numMine; i++) { // 랜덤 지뢰 배열만들기.
                 const randomIndex = flattedArray.splice(Math.floor(Math.random() * flattedArray.length), 1);
                 randomArray.push(randomIndex);
-                console.log(randomArray)
             }
             const flattedRandom = randomArray.flat();
             for (let j = 0; j < numMine; j++) { // 지뢰 배열 만들고, id, 텍스트 달아주기.
@@ -112,11 +107,23 @@
         }
 
 
-        function makeVisible() {
-            if (this.id === 'mine') {
+        function onClick() {
+            if (this.id === 'mine') { // 지뢰일 때 
                 this.style.color = 'white';
                 this.style.background = 'black';
                 this.textContent = '💥';
+            } else { // 지뢰가 아닐 때 주변 지뢰갯수 체크.
+                const onClickClass = this.className;
+                const checkList = [];
+                const classOfCheckList = [onClickClass - 11, onClickClass - 10, onClickClass - 9,
+                onClickClass - 1, parseInt(onClickClass) + 1,
+                parseInt(onClickClass) + 9, parseInt(onClickClass) + 10, parseInt(onClickClass) + 11];
+                for (let i = 0; i < classOfCheckList.length; i++) {
+                   checkList.push(copyFlatted[classOfCheckList[i]]);
+                };
+                console.log(checkList);
+                const countMine = checkList.filter(item => item.id === "mine").length;
+                this.textContent = countMine;
             };
         };
         function fillRed() {
@@ -125,12 +132,11 @@
                 this.style.background = '#888';
                 this.textContent = '';
             } else {
-                this.style.background = 'red';
                 this.style.color = 'black';
-                this.textContent = '⚠️';
+                this.textContent = '🚩';
             };
         };
-        console.log(mineArray);
+        console.log(rows);
     </script>
 </body>
 
