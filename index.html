@@ -99,9 +99,8 @@ function shuffleMine() {
         mineArray[j].id = "mine";
     }
 }
-function onClick() {
+function onClick() { // 공간을 클릭했을 때.
     if (this.id === 'mine') { // 지뢰일 때 
-        this.style.color = 'white';
         this.style.background = 'black';
         this.textContent = '💥';
     } else { // 지뢰가 아닐 때 주변 지뢰갯수 체크.
@@ -117,6 +116,7 @@ function onClick() {
         const countMine = checkList.filter(item => item.id === "mine").length;
         this.textContent = countMine;
         if (countMine === 0) {
+            this.textContent = ''; 
             let aroundCheckList = [];
             for (let j = 0; j < classOfCheckList.length; j++) {
                 const aroundClass = copyFlatted[classOfCheckList[j]].className;
@@ -128,6 +128,9 @@ function onClick() {
                 };
                 const aroundCountMine = aroundCheckList.filter(item => item.id === "mine").length;
                 copyFlatted[classOfCheckList[j]].textContent = aroundCountMine;
+                if( aroundCountMine === 0 ){ // 주변에 지뢰가 없는 땅 발견 시.
+                    copyFlatted[classOfCheckList[j]].textContent = '';
+                }
                 copyFlatted[classOfCheckList[j]].style.background = 'white';
                 aroundCheckList = [];
                 // console.log(aroundClass,aroundClassOfCheckList,aroundCheckList,aroundCountMine)
